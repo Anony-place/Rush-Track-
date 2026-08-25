@@ -1,0 +1,8 @@
+{
+  "name": "rush-track-qa",
+  "private": true,
+  "type": "module",
+  "description": "Visual QA harness (screenshots + autopilot soak) for Rush Track",
+  "scripts": { "shots": "node qa.mjs --shots", "soak": "node qa.mjs --soak" },
+  "dependencies": { "@sparticuz/chromium": "^149.0.0", "puppeteer-core": "^25.9.0" }
+}
