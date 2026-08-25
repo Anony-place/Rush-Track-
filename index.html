@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="theme-color" content="#101628">
+<meta name="description" content="Rush Track — turbo-charged hill racing stunt adventure. Upgrade your rig, conquer four worlds, chain flips for glory.">
+<title>Rush Track</title>
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" href="assets/img/icon-192.png">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div id="rotate-hint">
+    <div class="rh-inner">
+      <div class="rh-icon">
+        <svg viewBox="0 0 24 24"><path d="M17 1H7a2 2 0 0 0-2 2v18a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V3a2 2 0 0 0-2-2zm0 18H7V5h10v14z"/></svg>
+      </div>
+      <div class="rh-title">ROTATE YOUR DEVICE</div>
+      <div class="rh-sub">Rush Track plays in landscape</div>
+    </div>
+  </div>
+  <canvas id="game"></canvas>
+  <div id="ui"></div>
+  <div id="fx-layer"></div>
+  <script type="module" src="src/main.js"></script>
+</body>
+</html>
