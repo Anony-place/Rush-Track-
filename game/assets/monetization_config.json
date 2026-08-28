@@ -1,0 +1,28 @@
+{
+  "_comment": "Rush Track monetization config. The game ships in MOCK mode (no add-ons present): ads are simulated 2.2s cards and IAP are simulated 1.8s flows, so the full player loop works on any device before keys exist. To go live: (1) add your AdMob app id + unit ids below, (2) drop the Godot AdMob add-on into res://addons/godot-plugin-admob, (3) drop the IAP add-on into res://addons/godot-plugin-iap, (4) create the Play Billing products with the exact ids below. The engine auto-detects the add-ons at boot and switches to the real backends with zero code changes.",
+  "admob": {
+    "app_id": "ca-app-pub-3940256099942544~3347511713",
+    "banner_unit": "ca-app-pub-3940256099942544/6300978111",
+    "interstitial_unit": "ca-app-pub-3940256099942544/1033173712",
+    "rewarded_unit": "ca-app-pub-3940256099942544/5224354917"
+  },
+  "interstitial": {
+    "min_interval_seconds": 75,
+    "on_events": ["run_completed", "stage_unlock"],
+    "skip_when_revenue_likely": true
+  },
+  "rewarded": {
+    "double_coins": { "coin_multiplier": 2, "max_per_run": 1 },
+    "refuel": { "fuel_refill": 35, "max_per_run": 3 }
+  },
+  "iap_products": [
+    { "id": "remove_ads", "price": "$2.99", "type": "non_consuming", "description": "Remove all ads, forever." },
+    { "id": "coins_small", "price": "$0.99", "type": "non_consuming", "coins": 5000 },
+    { "id": "coins_mega", "price": "$2.99", "type": "non_consuming", "coins": 25000 },
+    { "id": "coins_premium", "price": "$4.99", "type": "non_consuming", "coins": 60000 }
+  ],
+  "mock": {
+    "ad_card_seconds": 2.2,
+    "iap_flow_seconds": 1.8
+  }
+}
