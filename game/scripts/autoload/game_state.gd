@@ -125,11 +125,11 @@ func vehicle_stats(index: int) -> Dictionary:
 	var tir := float(SaveManager.upgrade_level(index, "tires"))
 	var tank := float(SaveManager.upgrade_level(index, "tank"))
 	var air := float(SaveManager.upgrade_level(index, "air"))
-	var k: float = (480.0 + 110.0 * sus) * (def.mass / 110.0)
+	var k: float = (8000.0 + 5000.0 * sus) * (def.mass / 110.0)
 	return {
 		"power": def.power * (1.0 + 0.09 * eng),
 		"spring_k": k,
-		"spring_c": 0.7 * sqrt(k * def.mass * 0.5),
+		"spring_c": 0.85 * 2.0 * sqrt(k * (def.mass + 18.0) * 0.25),
 		"grip": def.grip * (1.0 + 0.08 * tir),
 		"tank": def.tank_capacity * (1.0 + 0.18 * tank),
 		"drain": def.fuel_drain * (1.0 - 0.04 * tank),

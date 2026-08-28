@@ -230,36 +230,36 @@ def _shading(d, box, top, bottom, r=6):
 
 
 def make_buggy():
-    """46 wide x 20 tall (world px at 1:1). Chassis center = canvas center."""
+    """46 wide x 20 tall. Canvas center = world body center (wheels are separate)."""
     W, H = 92, 48
     img, d, ss = canvas(W, H)
     u = W * ss / 92.0
-    cx, cy = 46 * u, 20 * u
-    # chassis
-    body_pts = [(-21 * u, 4 * u + cy), (-19 * u, -3 * u + cy), (-7 * u, -6 * u + cy),
-                (15 * u, -6 * u + cy), (21 * u, -2 * u + cy), (21 * u, 5 * u + cy),
-                (17 * u, 8 * u + cy), (-17 * u, 8 * u + cy)]
-    _shading(d, (-21 * u, -6 * u + cy, 21 * u, 8 * u + cy), (255, 168, 48), (196, 96, 8))
-    poly(d, body_pts, outline=(120, 58, 4, 255), width=int(2 * u))
+    cx, cy = 46 * u, 24 * u
+    # chassis (tall trapezoid, front-right)
+    body_pts = [(-21 * u, 8 * u + cy), (-20 * u, -4 * u + cy), (-6 * u, -7 * u + cy),
+                (10 * u, -7 * u + cy), (21 * u, -3 * u + cy), (21 * u, 8 * u + cy),
+                (17 * u, 10 * u + cy), (-17 * u, 10 * u + cy)]
+    _shading(d, (-21 * u, -7 * u + cy, 21 * u, 10 * u + cy), (255, 170, 50), (186, 88, 6), 8)
+    poly(d, body_pts, outline=(122, 56, 4, 255), width=int(2 * u))
     # hood stripe
-    poly(d, [(2 * u + cx, -5 * u + cy), (10 * u + cx, -5 * u + cy), (20 * u + cx, -1 * u + cy),
-             (12 * u + cx, -1 * u + cy)], fill=(250, 250, 252, 235))
-    # roll cage
-    arc(d, (cx, cy - 4 * u), 13 * u, 180, 360, (40, 44, 56, 255), int(3.4 * u))
-    line(d, (cx - 12 * u, cy - 4 * u), (cx - 14 * u, cy + 4 * u), (40, 44, 56, 255), int(3 * u))
-    line(d, (cx + 12 * u, cy - 4 * u), (cx + 14 * u, cy + 4 * u), (40, 44, 56, 255), int(3 * u))
+    poly(d, [(8 * u + cx, -6 * u + cy), (13 * u + cx, -6 * u + cy), (20 * u + cx, -2 * u + cy),
+             (15 * u + cx, -2 * u + cy)], fill=(250, 250, 252, 235))
     # seat
-    rrect(d, (cx - 6 * u, cy - 3 * u, cx + 2 * u, cy + 5 * u), 3 * u, fill=(52, 56, 70, 255))
+    rrect(d, (cx - 8 * u, cy - 4 * u, cx - 1 * u, cy + 6 * u), 3 * u, fill=(52, 56, 70, 255))
+    # roll cage over the seat (compact arc)
+    arc(d, (cx - 4 * u, cy - 4 * u), 9 * u, 180, 360, (40, 44, 56, 255), int(3 * u))
+    line(d, (cx - 13 * u, cy - 4 * u), (cx - 13 * u, cy + 2 * u), (40, 44, 56, 255), int(2.5 * u))
+    line(d, (cx + 5 * u, cy - 4 * u), (cx + 5 * u, cy + 2 * u), (40, 44, 56, 255), int(2.5 * u))
     # rear wing
-    rrect(d, (cx - 22 * u, cy - 9 * u, cx - 12 * u, cy - 6 * u), 2 * u, fill=(40, 44, 56, 255))
-    line(d, (cx - 16 * u, cy - 6 * u), (cx - 16 * u, cy - 2 * u), (40, 44, 56, 255), int(2.5 * u))
-    # headlights
-    circle(d, (cx + 20 * u, cy - 1 * u), 2.2 * u, fill=(255, 240, 170, 255))
-    circle(d, (cx - 20 * u, cy + 1 * u), 2 * u, fill=(255, 90, 60, 255))
-    # fender flares over wheel wells
-    arc(d, (cx - 14 * u, cy + 8 * u), 8 * u, 180, 360, (120, 58, 4, 255), int(3 * u))
-    arc(d, (cx + 14 * u, cy + 8 * u), 8 * u, 180, 360, (120, 58, 4, 255), int(3 * u))
-    img2 = finish(img)
+    rrect(d, (cx - 23 * u, cy - 10 * u, cx - 13 * u, cy - 7 * u), 2 * u, fill=(40, 44, 56, 255))
+    line(d, (cx - 17 * u, cy - 7 * u), (cx - 17 * u, cy - 2 * u), (40, 44, 56, 255), int(2.5 * u))
+    # fender flares over wheel positions
+    arc(d, (cx - 14 * u, cy + 9 * u), 6.5 * u, 180, 360, (122, 56, 4, 255), int(3.2 * u))
+    arc(d, (cx + 14 * u, cy + 9 * u), 6.5 * u, 180, 360, (122, 56, 4, 255), int(3.2 * u))
+    # lights
+    circle(d, (cx + 20.5 * u, cy - 1 * u), 2.2 * u, fill=(255, 240, 170, 255))
+    circle(d, (cx - 20.5 * u, cy + 2 * u), 2 * u, fill=(255, 90, 60, 255))
+    img2 = finish(img, out_w=46, out_h=24)
     out = os.path.join(ASSETS, "vehicles", "buggy_body.png")
     img2.save(out)
     print("wrote", out)
@@ -269,32 +269,33 @@ def make_mauler():
     W, H = 92, 56
     img, d, ss = canvas(W, H)
     u = W * ss / 92.0
-    cx, cy = 46 * u, 24 * u
-    # big fenders (monster truck)
-    for fx in (-17 * u, 17 * u):
-        arc(d, (cx + fx, cy + 6 * u), 13 * u, 180, 360, (26, 28, 36, 255), int(6 * u))
-    # body
-    _shading(d, (-20 * u, cy - 10 * u, 20 * u, cy + 6 * u), (255, 118, 40), (190, 66, 12))
-    body_pts = [(-20 * u, cy + 4 * u), (-20 * u, cy - 6 * u), (-14 * u, cy - 10 * u),
-                (6 * u, cy - 11 * u), (20 * u, cy - 6 * u), (20 * u, cy + 4 * u)]
+    cx, cy = 46 * u, 26 * u
+    # body slab
+    _shading(d, (-20 * u, cy - 9 * u, 20 * u, cy + 7 * u), (255, 122, 42), (180, 60, 10), 8)
+    body_pts = [(-20 * u, cy + 5 * u), (-20 * u, cy - 5 * u), (-13 * u, cy - 9 * u),
+                (7 * u, cy - 10 * u), (20 * u, cy - 5 * u), (20 * u, cy + 5 * u)]
     poly(d, body_pts, outline=(110, 40, 4, 255), width=int(2 * u))
     # cabin window
-    poly(d, [(-12 * u, cy - 10 * u), (-4 * u, cy - 14 * u), (8 * u, cy - 14 * u),
-             (12 * u, cy - 10 * u)], fill=(150, 200, 235, 255))
-    poly(d, [(-12 * u, cy - 10 * u), (-4 * u, cy - 14 * u), (0 * u, cy - 14 * u), (-6 * u, cy - 10 * u)],
+    poly(d, [(-11 * u, cy - 9 * u), (-3 * u, cy - 14 * u), (9 * u, cy - 14 * u),
+             (12 * u, cy - 9 * u)], fill=(150, 200, 235, 255))
+    poly(d, [(-11 * u, cy - 9 * u), (-3 * u, cy - 14 * u), (0 * u, cy - 14 * u), (-6 * u, cy - 9 * u)],
          fill=(200, 225, 245, 255))
-    # grill
+    # number plate
+    rrect(d, (cx - 7 * u, cy - 8 * u, cx + 3 * u, cy + 1 * u), 2 * u, fill=(245, 246, 250, 240))
+    # grill slats
     for i in range(4):
         x = (13 + i * 2) * u
-        line(d, (cx + x, cy - 6 * u), (cx + x, cy + 2 * u), (110, 40, 4, 255), int(1.6 * u))
-    # number plate
-    rrect(d, (cx - 6 * u, cy - 8 * u, cx + 4 * u, cy + 0 * u), 2 * u, fill=(245, 246, 250, 240))
+        line(d, (cx + x, cy - 5 * u), (cx + x, cy + 3 * u), (110, 40, 4, 255), int(1.6 * u))
     # stripe
-    line(d, (cx - 19 * u, cy + 2 * u), (cx + 19 * u, cy + 2 * u), (250, 250, 252, 200), int(2 * u))
+    line(d, (cx - 19 * u, cy + 3 * u), (cx + 19 * u, cy + 3 * u), (250, 250, 252, 200), int(2 * u))
+    # big fenders (monster truck)
+    for fx in (-16 * u, 16 * u):
+        arc(d, (cx + fx, cy + 7 * u), 11 * u, 180, 360, (26, 28, 36, 255), int(5.5 * u))
+        arc(d, (cx + fx, cy + 7 * u), 8.4 * u, 180, 360, (70, 76, 92, 255), int(2 * u))
     # lights
-    circle(d, (cx + 19 * u, cy - 4 * u), 2 * u, fill=(255, 240, 170, 255))
+    circle(d, (cx + 19 * u, cy - 3 * u), 2 * u, fill=(255, 240, 170, 255))
     circle(d, (cx - 19 * u, cy + 1 * u), 2 * u, fill=(255, 90, 60, 255))
-    img2 = finish(img)
+    img2 = finish(img, out_w=46, out_h=28)
     out = os.path.join(ASSETS, "vehicles", "mauler_body.png")
     img2.save(out)
     print("wrote", out)
@@ -304,31 +305,34 @@ def make_vortex():
     W, H = 96, 44
     img, d, ss = canvas(W, H)
     u = W * ss / 96.0
-    cx, cy = 48 * u, 19 * u
+    cx, cy = 48 * u, 20 * u
     # low rally body
-    _shading(d, (-22 * u, cy - 6 * u, 22 * u, cy + 6 * u), (72, 214, 232), (20, 140, 168))
-    body_pts = [(-22 * u, cy + 5 * u), (-22 * u, cy - 2 * u), (-16 * u, cy - 5 * u),
-                (-8 * u, cy - 8 * u), (8 * u, cy - 8 * u), (18 * u, cy - 3 * u),
-                (22 * u, cy), (22 * u, cy + 5 * u)]
+    _shading(d, (-22 * u, cy - 5 * u, 22 * u, cy + 7 * u), (72, 214, 232), (18, 130, 160), 7)
+    body_pts = [(-22 * u, cy + 6 * u), (-22 * u, cy - 1 * u), (-15 * u, cy - 5 * u),
+                (-7 * u, cy - 9 * u), (9 * u, cy - 9 * u), (18 * u, cy - 3 * u),
+                (22 * u, cy), (22 * u, cy + 6 * u)]
     poly(d, body_pts, outline=(8, 90, 110, 255), width=int(2 * u))
     # window
-    poly(d, [(-7 * u, cy - 7 * u), (0 * u, cy - 10 * u), (8 * u, cy - 10 * u), (7 * u, cy - 7 * u)],
+    poly(d, [(-6 * u, cy - 8 * u), (1 * u, cy - 11 * u), (9 * u, cy - 11 * u), (8 * u, cy - 8 * u)],
          fill=(160, 220, 245, 255))
     # number circle + 7
-    circle(d, (cx - 2 * u, cy - 1 * u), 5.5 * u, fill=(248, 249, 252, 250))
+    circle(d, (cx - 1 * u, cy), 5.5 * u, fill=(248, 249, 252, 250))
     font = ImageFont.truetype(os.path.join(ROOT, "game", "assets", "fonts", "Nunito-Black.ttf"), int(9 * u))
-    d.text((cx - 2 * u, cy - 1 * u), "7", font=font, fill=(16, 20, 32, 255), anchor="mm")
+    d.text((cx - 1 * u, cy + 0.5 * u), "7", font=font, fill=(16, 20, 32, 255), anchor="mm")
     # livery stripe
-    line(d, (cx - 21 * u, cy + 2 * u), (cx + 21 * u, cy + 2 * u), (250, 250, 252, 220), int(2.4 * u))
+    line(d, (cx - 21 * u, cy + 3 * u), (cx + 21 * u, cy + 3 * u), (250, 250, 252, 220), int(2.4 * u))
     # rear wing
-    rrect(d, (cx - 24 * u, cy - 10 * u, cx - 13 * u, cy - 8 * u), 1.6 * u, fill=(30, 34, 46, 255))
-    line(d, (cx - 18 * u, cy - 8 * u), (cx - 18 * u, cy - 4 * u), (30, 34, 46, 255), int(2 * u))
+    rrect(d, (cx - 25 * u, cy - 10 * u, cx - 14 * u, cy - 7.6 * u), 1.6 * u, fill=(30, 34, 46, 255))
+    line(d, (cx - 18 * u, cy - 7.6 * u), (cx - 18 * u, cy - 3 * u), (30, 34, 46, 255), int(2 * u))
     # splitter
-    rrect(d, (cx + 14 * u, cy + 4 * u, cx + 23 * u, cy + 6.5 * u), 1.4 * u, fill=(30, 34, 46, 255))
+    rrect(d, (cx + 14 * u, cy + 5 * u, cx + 24 * u, cy + 7.4 * u), 1.4 * u, fill=(30, 34, 46, 255))
+    # fender lips over wheels
+    arc(d, (cx - 14 * u, cy + 6 * u), 6 * u, 180, 360, (8, 90, 110, 255), int(2.6 * u))
+    arc(d, (cx + 14 * u, cy + 6 * u), 6 * u, 180, 360, (8, 90, 110, 255), int(2.6 * u))
     # lights
-    circle(d, (cx + 21 * u, cy - 1 * u), 2 * u, fill=(255, 250, 200, 255))
-    circle(d, (cx - 21 * u, cy + 1 * u), 1.8 * u, fill=(255, 80, 60, 255))
-    img2 = finish(img)
+    circle(d, (cx + 21 * u, cy), 2 * u, fill=(255, 250, 200, 255))
+    circle(d, (cx - 21 * u, cy + 1.5 * u), 1.8 * u, fill=(255, 80, 60, 255))
+    img2 = finish(img, out_w=48, out_h=22)
     out = os.path.join(ASSETS, "vehicles", "vortex_body.png")
     img2.save(out)
     print("wrote", out)

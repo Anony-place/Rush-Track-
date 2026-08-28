@@ -55,7 +55,7 @@ func height_m(x_m: float) -> float:
 	var s: Variant = stage
 	var t := clampf(x_m / 1200.0, 0.0, 1.0)
 	var amp := lerpf(s.slope_start, s.slope_end, t * t)
-	var f := s.frequency
+	var f: float = float(s.frequency)
 	var y := 0.0
 	y += 0.55 * sin(x_m * 0.11 * f + _phase[0])
 	y += 0.30 * sin(x_m * 0.051 * f + _phase[1])
@@ -167,7 +167,7 @@ func _spawn_chunk(id: int) -> void:
 	body.add_child(col)
 	root.add_child(body)
 
-	var painter := _ChunkPainter.new()
+	var painter = _ChunkPainter.new()
 	painter.surf_points = surf
 	painter.stage = stage
 	painter.chunk_id = id

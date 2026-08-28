@@ -118,10 +118,10 @@ static func chunk_button(text: String, kind: String = "accent") -> Button:
 	s_press.bg_color = edge
 	s_press.content_margin_top = 22.0
 	s_press.content_margin_bottom = 12.0
-	b.add_theme_stylebox("normal", "Button", s)
-	b.add_theme_stylebox("hover", "Button", s_hover)
-	b.add_theme_stylebox("pressed", "Button", s_press)
-	b.add_theme_stylebox("focus", "Button", _focus())
+	b.add_theme_stylebox_override("normal", s)
+	b.add_theme_stylebox_override("hover", s_hover)
+	b.add_theme_stylebox_override("pressed", s_press)
+	b.add_theme_stylebox_override("focus", _focus())
 	b.add_theme_color_override("font_color", C_TEXT)
 	b.add_theme_color_override("font_hover_color", Color.WHITE)
 	b.add_theme_color_override("font_pressed_color", Color(1, 1, 1, 0.9))

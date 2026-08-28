@@ -53,7 +53,7 @@ func _ready() -> void:
 	add_child(_engine)
 	var eng: AudioStream = load("res://assets/audio/engine_loop.wav")
 	if eng:
-		eng.loop = true
+		_make_loop(eng)
 		_engine.stream = eng
 		_engine.play()
 	_engine.volume_db = -80.0
@@ -69,6 +69,13 @@ func _ensure_buses() -> void:
 			AudioServer.set_bus_name(idx, bus)
 			AudioServer.set_bus_send(idx, "Master")
 	_apply_volumes()
+
+func _make_loop(st: AudioStream) -> void:
+	# AudioStreamWAV loop modes: 0 disabled, 1 forward, 2 ping-pong, 3 backward.
+	st.loop_mode = 1
+	st.loop_begin = 0
+	st.loop_end = -1
+
 
 func _build_sfx_pool() -> void:
 	for key in SFX_FILES:
@@ -102,6 +109,7 @@ func play_theme(theme_id: String) -> void:
 	var stream: AudioStream = load(path)
 	if stream == null:
 		return
+	_make_loop(stream)
 	_music.stream = stream
 	_music.play()
 
@@ -119,6 +127,7 @@ func set_ambience(id: String) -> void:
 	var stream: AudioStream = load("res://assets/audio/%s.wav" % id)
 	if stream == null:
 		return
+	_make_loop(stream)
 	_ambience.stream = stream
 	_ambience.volume_db = -80.0
 	_ambience.play()

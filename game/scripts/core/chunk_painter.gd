@@ -19,13 +19,13 @@ func _draw() -> void:
 	var x0_m: float = chunk_id * 30.0
 	# Stratified fill: mid earth everywhere, dark stratum from 6 m down.
 	var full: PackedVector2Array = surf_points.duplicate()
-	full.append(Vector2(surf_points.back().x, DEPTH_M * px_per_m))
+	full.append(Vector2(surf_points[surf_points.size() - 1].x, DEPTH_M * px_per_m))
 	full.append(Vector2(surf_points[0].x, DEPTH_M * px_per_m))
 	draw_colored_polygon(full, stage.ground_mid)
 	var deep: PackedVector2Array = PackedVector2Array()
 	for p in surf_points:
 		deep.append(p + Vector2(0, 6.0 * px_per_m))
-	deep.append(Vector2(surf_points.back().x, DEPTH_M * px_per_m))
+	deep.append(Vector2(surf_points[surf_points.size() - 1].x, DEPTH_M * px_per_m))
 	deep.append(Vector2(surf_points[0].x, DEPTH_M * px_per_m))
 	draw_colored_polygon(deep, stage.ground_dark)
 	# Surface line.

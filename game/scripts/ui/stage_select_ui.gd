@@ -142,7 +142,7 @@ func _refresh() -> void:
 		if SaveManager.is_stage_unlocked(i):
 			lock.text = ""
 		else:
-			var req := {1: 400, 2: 900, 3: 1600}.get(i, 0)
+			var req: int = int({1: 400, 2: 900, 3: 1600}.get(i, 0))
 			lock.text = "LOCKED — reach %dm in any world" % req
 		if i == sel:
 			ring.add_theme_stylebox_override("panel", _ring_box(UIKit.C_ACCENT))

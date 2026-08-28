@@ -66,7 +66,7 @@ func _ready() -> void:
 	add_child(car)
 	car.setup(vehicle_index)
 	car.terrain_ref = terrain
-	car.position = Vector2(20.0, -terrain.height_m(1.0) * 20.0 - 30.0)
+	car.position = Vector2(20.0, -terrain.height_m(1.0) * 20.0 - car.spawn_clearance() - 6.0)
 	car.flipped_in_air.connect(_on_flipped)
 
 	# Camera.
@@ -163,7 +163,7 @@ func _physics_process(delta: float) -> void:
 		EventBus.fuel_changed.emit(fuel / fuel_capacity)
 		# Fuel-out stall ending.
 		if car.is_fuel_dead():
-			if car.body.velocity.length() < 8.0:
+			if car.body.linear_velocity.length() < 8.0:
 				_out_of_fuel_time += delta
 				if _out_of_fuel_time > 2.5:
 					_end_run(false, true)
@@ -171,11 +171,11 @@ func _physics_process(delta: float) -> void:
 			else:
 				_out_of_fuel_time = 0.0
 	# Camera follow (always, even while crashed so the wreck is visible).
-	var look: Vector2 = car.body.velocity * 0.30
-	var target: Vector2 = car.global_position + look + Vector2(30.0, -40.0)
+	var look: Vector2 = car.body.linear_velocity * 0.30
+	var target: Vector2 = car.body.global_position + look + Vector2(30.0, -40.0)
 	cam_rig.global_position = cam_rig.global_position.lerp(target, 1.0 - exp(-6.0 * delta))
 	# Camera tilt with speed.
-	var speed_ms: float = car.body.velocity.length() / 20.0
+	var speed_ms: float = car.body.linear_velocity.length() / 20.0
 	var tilt: float = clampf(speed_ms / 40.0, 0.0, 1.0) * 0.10
 	var cam_target_rot: float = tilt * 0.0  # HCR-style: keep horizon, subtle zoom only
 	cam.rotation = lerp_angle(cam.rotation, cam_target_rot, 4.0 * delta)
@@ -191,7 +191,7 @@ func _physics_process(delta: float) -> void:
 	else:
 		cam.offset = Vector2.ZERO
 	# Distance & passive coins.
-	var x_m: float = car.global_position.x / 20.0
+	var x_m: float = car.body.global_position.x / 20.0
 	distance_m = maxf(distance_m, x_m)
 	if distance_m >= _next_passive_coin_m:
 		coins_run += 1
@@ -206,7 +206,7 @@ func _physics_process(delta: float) -> void:
 	# Engine audio.
 	AudioManager.set_engine(car.rpm, car.throttle, car.alive and not car.is_fuel_dead() and _countdown_done)
 	# Terrain streaming.
-	terrain.generate_around(car.global_position.x, 6)
+	terrain.generate_around(car.body.global_position.x, 6)
 	# Crash slow-mo.
 	if _crash_time >= 0.0:
 		_crash_time += delta
@@ -214,7 +214,7 @@ func _physics_process(delta: float) -> void:
 		if _crash_time > 1.9:
 			_end_run(true, false)
 	# Autopilot idle safety: nudge if the car backs off the start.
-	if _countdown_done and car.alive and distance_m < 1.0 and car.body.velocity.x < -5.0:
+	if _countdown_done and car.alive and distance_m < 1.0 and car.body.linear_velocity.x < -5.0:
 		car.set_autopilot(true, false)
 
 func _on_pause_requested() -> void:
@@ -275,7 +275,7 @@ func _trigger_crash() -> void:
 	AudioManager.play_sfx("crash")
 	Haptics.vibrate("crash")
 	_crash_time = 0.0
-	_spawn_debris(car.global_position)
+	_spawn_debris(car.body.global_position)
 	EventBus.crash_detected.emit()
 	SaveManager.write("stats.crashes", int(SaveManager.read("stats.crashes", 0)) + 1)
 
@@ -345,11 +345,11 @@ func _autopilot(delta: float) -> void:
 	# Simple but effective policy: hold the gas; in the air, level out.
 	if not _countdown_done:
 		return
-	var car_v: float = car.body.velocity.x
+	var car_v: float = car.body.linear_velocity.x
 	var gas := true
 	var brake := false
 	if car.airborne:
-		var ang := car._wrap_angle(car.body.rotation)
+		var ang: float = car._wrap_angle(car.body.rotation)
 		if ang > 0.45:
 			gas = false
 			brake = true   # frontflip input = right-rotate to level out
@@ -362,7 +362,7 @@ func _autopilot(delta: float) -> void:
 
 func _finish_smoke() -> void:
 	# Self-report for CI.
-	var x_m: float = car.global_position.x / 20.0
+	var x_m: float = car.body.global_position.x / 20.0
 	var ok_dist: bool = x_m > 40.0
 	var ok_fuel: bool = fuel < fuel_capacity or coins_run >= 0
 	var msg := "SMOKE: dist=%.0fm coins=%d flips=%d fuel=%.0f%% alive=%s crashed=%s" % [
